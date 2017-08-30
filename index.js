@@ -21,7 +21,7 @@ app.get('/task', function(req, res){
 //POST REQUEST
 app.post('/post', function (req,res){
 	console.log('Added ' + req.body.task);
-	//console.log(req.body);
+	console.log(req.body);
 	results.push(req.body.task);
 	res.sendStatus(200);
 
