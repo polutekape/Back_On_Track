@@ -31,13 +31,14 @@ if(taskName === ""){return false;}
 //ajax call to server
 var ERROR_LOG = console.error.bind(console);
 $.ajax({
-	method: 'POST',
-	url: 'http://localhost:8081/post',
-	data: JSON.stringify({
-		task: taskName
-		}),
-	contentType: "application/json",
-	dataType:"json"
+    method: 'POST',
+	//url: 'http://localhost:8081/post',
+    url: 'http://192.168.88.155:8081/post', 
+    data: JSON.stringify({
+	task: taskName
+    }),
+    contentType: "application/json",
+    dataType:"json"
 });
 
 //Creating new row in the table
@@ -64,18 +65,19 @@ $(this).dialog('close');
 
 //get task list from database
 function getTaskList(){
-	$.ajax({
-		method: 'GET',
-		url : 'http://localhost:8081/task',
-		success: function(result){
-			$('#todo-list').empty();
-			for(i = 0; i < result.length; i++){
-				console.log('added on client ' +  result[i]);
-				ComingTask = result[i];
-				addTaskList(ComingTask);
-			}
-		}
-	})
+    $.ajax({
+	method: 'GET',
+		//url : 'http://localhost:8081/task',
+	url: 'http://192.168.88.155:8081/task',
+	success: function(result){
+	    $('#todo-list').empty();
+	    for(i = 0; i < result.length; i++){
+		console.log('added on client ' +  result[i]);
+		ComingTask = result[i];
+		addTaskList(ComingTask);
+	    }
+	}
+    })
 }
 
 //assigning the right item to the correct list
