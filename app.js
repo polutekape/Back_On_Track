@@ -3,26 +3,23 @@ var app = express();
 var bodyParser = require('body-parser');
 var path = require('path');
 var port = process.env.PORT||8081;
-//var router = express.Router();
 
-//access the directory
 app.use(express.static(path.join(__dirname,'views')));
 app.set('view engine','ejs');
 app.use(bodyParser.urlencoded());
 app.use(bodyParser.json());
 
-//postgres mysql 
-var mysql = require('mysql');
+//postgresql
+//var mysql = require('mysql');
 
 //Creating connection to the database
-var connection = mysql.createConnection({
+/*var connection = mysql.createConnection({
     host : 'localhost',
     user : 'root',
     password : 'goodboy22',
     database : 'bot'
 })
 
-/*
 connection.query('INSERT INTO Users VALUES("POLI","POLO","POLO")',function(err,rows,field){
     if(!err){
 	console.log("Success");
@@ -51,9 +48,24 @@ app.get('/', function(req,res){
 });
 
 //get data list of this macaddress
-app.get('/datalist', function(req, res){
-    console.log('datalist');
-    res.render('datalist');    
+app.post('/login', function(req, res){
+    console.log(req.body.userid);
+    console.log(req.body.password);
+    if(req.body.userid == 'kapz' && req.body.password == 'polo'){
+        console.log('datalist');
+        res.render('datalist',{
+            title:'Datalist'
+        });
+    }/*else{
+        res.render('index',{
+            title:'Login'
+        });
+    }*/   
+});
+
+app.post('/test', function(req, res){
+    console.log('reached test');
+    console.log(req.body);
 });
 
 app.get('/task', function(req, res){

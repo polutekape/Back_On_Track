@@ -1,22 +1,37 @@
 $(document).ready(function(e) {
 $('#add-todo').button({icons:{primary: "ui-icon-circle-plus"}});
 $('#new-todo').dialog({ modal : true, autoOpen : false });
+$('#calendar').dialog({ modal : true, autoOpen : true });
 $('#con-del').dialog({ modal : true, autoOpen : false }); //task 2.8
 
-
 var currentTask;
+var currentDate;
 var ComingTask = ' ';
+
 
 $('#add-todo').button({
 icons: { primary: 'ui-icon-circle-plus'}}).click(
 function() {
-$('#new-todo').dialog('open');
+	$('#new-todo').dialog('open');
 });
 
-$('#clear-hex').button({
-icons: { primary: 'ui-icon-circle-minus'}}).click(
+
+//Login page call
+$('#LetMeIn').click(function(){
+	var username = $('#user').val();
+	var password = $('#pass').val();
+
+	if(username == 'kapz' && password == 'polo'){
+		//let it go through
+	}else{
+		swal('Failed','Invalid Text','error');
+	}
+});
+
+$('#Choose-Date').button({
+icons: { primary: 'ui-icon-clock'}}).click(
 function() {
-$('#con-del').dialog('open');
+$('#calendar').dialog('open');
 });
 
 //2.4 Add new tasks to the to-do list
@@ -33,7 +48,7 @@ var ERROR_LOG = console.error.bind(console);
 $.ajax({
     method: 'POST',
 	//url: 'http://localhost:8081/post',
-    url: 'http://192.168.88.155:8081/post', 
+    url: '/post', 
     data: JSON.stringify({
 	task: taskName
     }),
@@ -68,7 +83,7 @@ function getTaskList(){
     $.ajax({
 	method: 'GET',
 		//url : 'http://localhost:8081/task',
-	url: 'http://192.168.88.155:8081/task',
+	url: '/task',
 	success: function(result){
 	    $('#todo-list').empty();
 	    for(i = 0; i < result.length; i++){
@@ -124,7 +139,7 @@ buttons : {
 		$('#to-do2').empty();
   		$.ajax({
  			method: 'DELETE',
- 			url: 'http://localhost:8081/delete',
+ 			url: '/delete',
  			data: JSON.stringify({
  				task: 'delete'
  			}),
@@ -139,7 +154,7 @@ buttons : {
 
 
 //2.9 values for the graph
-function rand() { 
+/*function rand() { 
   return Math.random();
 }
 
@@ -150,17 +165,62 @@ Plotly.plot('graph', [{
 }]);
 
 var cnt = 0;
-var interval = setInterval(function() {
+
+var interval = setInterval(function(){
   
 Plotly.extendTraces('graph', {
     y: [[rand()]]
 }, [0])
 
- if(cnt === 100) clearInterval(interval);
-}, 300);
+ if(cnt === 10) clearInterval(interval);
+}, 300);*/
+
+var Aim = {
+  x: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 
+  y: [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5],
+  name : 'Aim',
+  type: 'scatter'
+};
+var Performance = {
+  x: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 
+  y: [0, 2, 5, 8, 6, 7, 5, 4, 3, 2, 4], 
+  name : 'Performance',
+  type: 'scatter'
+};
+var data = [Aim, Performance];
+var layout = {
+	xaxis:{
+		title: 'Time'
+	},
+	yaxis: {
+		title: 'Performance'
+	}
+};
+Plotly.newPlot('graph', data, layout);
+
+//Calendar
+$(function() {
+    $( "#datepicker-12" ).datepicker();
+    $( "#datepicker-12" ).datepicker('show');
+    $( "#datepicker-12" ).datepicker("setDate", "0");
+});
+
+//Calendar dialog
+$('#calendar').dialog({
+modal : true, autoOpen : false,
+buttons : {
+ "Run" : function(){
+ 			currentDate = $( "#datepicker-12" ).val();
+ 			$("#day").val(currentDate);
+    		console.log(currentDate);
+ 			$(this).dialog('close');
+ 		},
+ "Close" : function(){$(this).dialog('close');}
+}
+});
 
 
-   
+
 getTaskList();
 
 }); // end ready

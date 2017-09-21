@@ -18,6 +18,16 @@
     "express": "^4.15.4",
     "mustache": "^2.3.0",
     "path": "^0.12.7",
-    "pg": "^6.4.2"
-  }
+    "pg": "^6.4.2",
+    "sweetalert": "^2.0.3"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/polutekape/Back_On_Track.git"
+  },
+  "bugs": {
+    "url": "https://github.com/polutekape/Back_On_Track/issues"
+  },
+  "homepage": "https://github.com/polutekape/Back_On_Track#readme"
 }
