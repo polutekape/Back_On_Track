@@ -82,14 +82,14 @@ $(this).dialog('close');
 function getTaskList(){
     $.ajax({
 	method: 'GET',
-		//url : 'http://localhost:8081/task',
-	url: '/task',
+	url : 'http://localhost:8081/result',
+	//url: '/results',
 	success: function(result){
 	    $('#todo-list').empty();
 	    for(i = 0; i < result.length; i++){
 		console.log('added on client ' +  result[i]);
 		ComingTask = result[i];
-		addTaskList(ComingTask);
+		//addTaskList(ComingTask);
 	    }
 	}
     })
@@ -103,15 +103,17 @@ function addTaskList(data){
    if(taskName == ' ' || taskName == undefined){console.log('nothing'); return;}
 
 //Creating new row in the table
-	var tableHTML = '<tr><td><span class = "value1"></td>';
-	tableHTML += '<td><span class = "value2"></td>';
-	tableHTML += '<td><span class = "value3"></td></tr>';
+	var tableHTML = '<tr><td><span class = "userid"></td>';
+	tableHTML += '<td><span class = "date"></td>';
+	tableHTML += '<td><span class = "time"></td>';
+	tableHTML += '<td><span class = "value"></td>';
 
 	//table design
 	var $newTable = $(tableHTML);
-	$newTable.find('.value1').text(taskName);
-	$newTable.find('.value2').text(taskName);
-	$newTable.find('.value3').text(taskName);
+	$newTable.find('.userid').text(taskName);
+	$newTable.find('.date').text(taskName);
+	$newTable.find('.time').text(taskName);
+	$newTable.find('.value').text(taskName);
 	$('#to-do2').prepend($newTable);
 
 }

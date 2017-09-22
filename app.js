@@ -8,6 +8,12 @@ app.use(express.static(path.join(__dirname,'views')));
 app.set('view engine','ejs');
 app.use(bodyParser.urlencoded());
 app.use(bodyParser.json());
+var pg = require('pg');
+
+var connectionString = "postgres://polutekape:myvuw2017@depot:5432/polutekape_jdbc";
+var client = new pg.Client(connectionString);
+client.connect();
+
 
 //postgresql
 //var mysql = require('mysql');
@@ -56,20 +62,24 @@ app.post('/login', function(req, res){
         res.render('datalist',{
             title:'Datalist'
         });
-    }/*else{
-        res.render('index',{
-            title:'Login'
-        });
-    }*/   
+    } 
 });
 
-app.post('/test', function(req, res){
-    console.log('reached test');
-    console.log(req.body);
-});
+app.get('/result', function(request, response){
+    console.log('reached result');
+    //SQL Query > Select Data
+    var query = client.query("SELECT * FROM users");
+    var results = [];
+    //Stream results back one row at a time
+    query.on('row',function(row){
+        results.push(row);
+    });
 
-app.get('/task', function(req, res){
-	res.send(results);
+    //After all data is returned, close connection and return results
+    query.on('end', function(){
+        //client.end();
+        response.send(results);
+    });
 });
 
 //POST REQUEST
