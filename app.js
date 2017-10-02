@@ -10,40 +10,6 @@ app.use(bodyParser.urlencoded());
 app.use(bodyParser.json());
 var pg = require('pg');
 
-var connectionString = "postgres://polutekape:myvuw2017@depot:5432/polutekape_jdbc";
-var client = new pg.Client(connectionString);
-client.connect();
-
-
-//postgresql
-//var mysql = require('mysql');
-
-//Creating connection to the database
-/*var connection = mysql.createConnection({
-    host : 'localhost',
-    user : 'root',
-    password : 'goodboy22',
-    database : 'bot'
-})
-
-connection.query('INSERT INTO Users VALUES("POLI","POLO","POLO")',function(err,rows,field){
-    if(!err){
-	console.log("Success");
-    }else{
-	console.log("error");
-    }
-});
-
-connection.query('SELECT * FROM Users',function(err,rows,field){
-    if(!err){
-	console.log(rows);
-    }else{
-	console.log(err);
-    }
-});
-
-connection.end();
-*/
 
 var results = [];
 
