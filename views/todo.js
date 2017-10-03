@@ -4,29 +4,56 @@ $('#new-todo').dialog({ modal : true, autoOpen : false });
 $('#calendar').dialog({ modal : true, autoOpen : true });
 $('#con-del').dialog({ modal : true, autoOpen : false }); //task 2.8
 
-var currentTask;
-var currentDate;
+
 var ComingTask = ' ';
 
 
-$('#add-todo').button({
-icons: { primary: 'ui-icon-circle-plus'}}).click(
-function() {
-	$('#new-todo').dialog('open');
-});
+var CurUser = "";
+var currentDate;
+
+
 
 
 //Login page call
 $('#LetMeIn').click(function(){
 	var username = $('#user').val();
-	var password = $('#pass').val();
-
-	if(username == 'kapz' && password == 'polo'){
-		//let it go through
-	}else{
-		swal('Failed','Invalid Text','error');
+	var pass = $('#pass').val();
+	CurUser = username;
+	console.log(username + " " + pass);
+	
+	if(username == "" && pass == ""){
+		console.log('letmetin');
+		swal('No Input Values','Enter Data', 'error');
+		return false;
 	}
+
+	$.ajax({
+		method: 'POST',
+		url : 'http://localhost:8081/login',
+		data: JSON.stringify({
+			userid: username,
+			password : pass
+		}),
+		contentType: "application/json",
+	    dataType:"json", 
+	}).then(printResult,username);
 });
+
+function printResult(result){
+	if(result.length == 0){
+		swal('Invalid User','Register Via App', 'error');
+			return;
+	}else{
+		if (typeof(Storage) !== "undefined") {
+	    	// Store
+	    	localStorage.setItem("CurrentUser", CurUser);
+	    	// Retrieve
+	    	window.location = 'http://localhost:8081/datalist';
+		} else {
+	   		$("#CurrentUser").val(localStorage.getItem("Sorry, your browser does not support Web Storage..."));
+		}
+	}
+}
 
 $('#Choose-Date').button({
 icons: { primary: 'ui-icon-clock'}}).click(
@@ -47,7 +74,6 @@ if(taskName === ""){return false;}
 var ERROR_LOG = console.error.bind(console);
 $.ajax({
     method: 'POST',
-	//url: 'http://localhost:8081/post',
     url: '/post', 
     data: JSON.stringify({
 	task: taskName
@@ -79,28 +105,40 @@ $(this).dialog('close');
 
 
 //get task list from database
-function getTaskList(){
+function getTaskList(date){
+	
+	var User = localStorage.getItem("CurrentUser");
+	console.log(User);
     $.ajax({
-	method: 'GET',
-	url : 'http://localhost:8081/result',
-	//url: '/results',
-	success: function(result){
-	    $('#todo-list').empty();
-	    for(i = 0; i < result.length; i++){
-		console.log('added on client ' +  result[i]);
-		ComingTask = result[i];
-		//addTaskList(ComingTask);
-	    }
-	}
-    })
+		method: 'POST',
+		url : 'http://localhost:8081/result',
+		data: JSON.stringify({
+			Username: User,
+			Dat: date
+	    }),
+		contentType: "application/json",
+	    dataType:"json", 
+		success: function(result){
+		    $('#todo-list').empty();
+		    console.log("success");
+		    for(var i = 0; i < result.length; i++){
+			    console.log(CurUser);
+				console.log('added on client  ' +  result[i].userid + '  ' + result[i].dat);
+				addTaskList(result[i]);
+	  		}
+		},
+		error: function(error){
+			console.log("error");
+		}
+    });
 }
+
 
 //assigning the right item to the correct list
 function addTaskList(data){
-   var taskName = ComingTask;
-   console.log('listing ' + taskName);
+   console.log('listing ' + data.userid);
 
-   if(taskName == ' ' || taskName == undefined){console.log('nothing'); return;}
+   if(data == ' ' || data == undefined){console.log('nothing'); return;}
 
 //Creating new row in the table
 	var tableHTML = '<tr><td><span class = "userid"></td>';
@@ -108,12 +146,14 @@ function addTaskList(data){
 	tableHTML += '<td><span class = "time"></td>';
 	tableHTML += '<td><span class = "value"></td>';
 
+	 var datstr = data.dat;
+
 	//table design
 	var $newTable = $(tableHTML);
-	$newTable.find('.userid').text(taskName);
-	$newTable.find('.date').text(taskName);
-	$newTable.find('.time').text(taskName);
-	$newTable.find('.value').text(taskName);
+	$newTable.find('.userid').text(data.userid);
+	$newTable.find('.date').text(datstr.substring(0, 10));
+	$newTable.find('.time').text(data.tim);
+	$newTable.find('.value').text(data.val);
 	$('#to-do2').prepend($newTable);
 
 }
@@ -154,29 +194,6 @@ buttons : {
 }
 });
 
-
-//2.9 values for the graph
-/*function rand() { 
-  return Math.random();
-}
-
-Plotly.plot('graph', [{
-  y: [1,2,3].map(rand),
-  mode: 'lines',
-  line: {color: '#80CAF6'}
-}]);
-
-var cnt = 0;
-
-var interval = setInterval(function(){
-  
-Plotly.extendTraces('graph', {
-    y: [[rand()]]
-}, [0])
-
- if(cnt === 10) clearInterval(interval);
-}, 300);*/
-
 var Aim = {
   x: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 
   y: [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5],
@@ -215,16 +232,19 @@ buttons : {
  			currentDate = $( "#datepicker-12" ).val();
  			$("#day").val(currentDate);
     		console.log(currentDate);
- 			$(this).dialog('close');
+    		var chunks = currentDate.split('/');
+    		var DatabaseFormat = chunks[2]+'-'+chunks[0]+'-'+chunks[1]; 
+    		console.log(DatabaseFormat);
+    		getTaskList(DatabaseFormat);
+
+			$(this).dialog('close');
  		},
  "Close" : function(){$(this).dialog('close');}
 }
 });
 
-
-
-getTaskList();
-
+//getTaskList();
+$("#CurrentUser").val(localStorage.getItem("CurrentUser"));
 }); // end ready
 
 

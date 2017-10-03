@@ -4,9 +4,9 @@ var bodyParser = require('body-parser');
 var path = require('path');
 var port = process.env.PORT||8081;
 
-app.use(express.static(path.join(__dirname,'views')));
+app.use(express.static(path.join(__dirname , 'views')));
 app.set('view engine','ejs');
-app.use(bodyParser.urlencoded());
+app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 var pg = require('pg');
 
@@ -14,36 +14,6 @@ var connectionString = "postgres://polutekape:myvuw2017@depot:5432/polutekape_jd
 var client = new pg.Client(connectionString);
 client.connect();
 
-
-//postgresql
-//var mysql = require('mysql');
-
-//Creating connection to the database
-/*var connection = mysql.createConnection({
-    host : 'localhost',
-    user : 'root',
-    password : 'goodboy22',
-    database : 'bot'
-})
-
-connection.query('INSERT INTO Users VALUES("POLI","POLO","POLO")',function(err,rows,field){
-    if(!err){
-	console.log("Success");
-    }else{
-	console.log("error");
-    }
-});
-
-connection.query('SELECT * FROM Users',function(err,rows,field){
-    if(!err){
-	console.log(rows);
-    }else{
-	console.log(err);
-    }
-});
-
-connection.end();
-*/
 
 var results = [];
 
@@ -54,31 +24,52 @@ app.get('/', function(req,res){
 });
 
 //get data list of this macaddress
-app.post('/login', function(req, res){
-    console.log(req.body.userid);
-    console.log(req.body.password);
-    if(req.body.userid == 'kapz' && req.body.password == 'polo'){
-        console.log('datalist');
-        res.render('datalist',{
-            title:'Datalist'
-        });
-    } 
-});
+app.get('/datalist', function(req, res){
+   console.log("datalist");
+   res.render('datalist');
+}); 
 
-app.get('/result', function(request, response){
-    console.log('reached result');
+
+
+//Login check
+app.post('/login', function(req, res){
     //SQL Query > Select Data
-    var query = client.query("SELECT * FROM users");
+    console.log(req.body.userid + ' ' + req.body.password);
+    var query = client.query("SELECT * FROM Users WHERE Userid = '"+ req.body.userid +"' AND Password = '" + req.body.password + "';");
+
     var results = [];
     //Stream results back one row at a time
     query.on('row',function(row){
         results.push(row);
     });
 
+   query.on('error', function(err){
+        console.log('Error retrieving things: ' + err);
+   });
     //After all data is returned, close connection and return results
     query.on('end', function(){
         //client.end();
-        response.send(results);
+        res.send(results);
+    });
+});
+
+
+app.post('/result', function(req, res){
+    //SQL Query > Select Data
+    console.log("reached result " + req.body.Username + " " + req.body.Dat);
+    var user = req.body.Username;
+    var date = req.body.Dat;
+    console.log("SELECT * FROM data WHERE Userid = '"+user+"' AND Dat = '"+date+"';");
+    var query = client.query("SELECT * FROM data WHERE Userid = '"+user+"' AND Dat = '"+date+"';");
+    var results = [];
+    //Stream results back one row at a time
+    query.on('row',function(row){
+        results.push(row);
+    });
+    //After all data is returned, close connection and return results
+    query.on('end', function(){
+        //client.end();
+        res.send(results);
     });
 });
 
