@@ -11,16 +11,18 @@ app.use(bodyParser.json());
 var pg = require('pg');
 
 
-//var connectionString = "postgres://polutekape:myvuw2017@depot:5432/polutekape_jdbc";
+var connectionString = "postgres://wudzjlxhfycqls:8bea5e639ed8f35ae80dad3555068c739acc0f88fac7d72461a6bcb62e1e8cd2@ec2-54-235-80-137.compute-1.amazonaws.com:5432/d3rhmnr8bnkgue";
+/*
 var client = new pg.Client(
-    user: 'wudzjlxhfycqls',
-	password: '8bea5e639ed8f35ae80dad3555068c739acc0f88fac7d72461a6bcb62e1e8cd2',
-	database: 'd3rhmnr8bnkgue',
-	port: 5432,
-	host: 'ec2-54-235-80-137.compute-1.amazonaws.com',
-	ssl: true
-);
+   user: 'wudzjlxhfycqls',
+   password: '8bea5e639ed8f35ae80dad3555068c739acc0f88fac7d72461a6bcb62e1e8cd2',
+   database: 'd3rhmnr8bnkgue',
+   port: 5432,
+   host: 'ec2-54-235-80-137.compute-1.amazonaws.com',
+   ssl: true
+);*/
 
+var client = new pg.Client(connectionString);
 client.connect();
 
 var results = [];
