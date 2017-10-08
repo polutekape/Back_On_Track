@@ -36,14 +36,13 @@ $('#LetMeIn').click(function(){
 	console.log(username + " " + pass);
 	
 	if(username == "" && pass == ""){
-		console.log('letmetin');
 		swal('No Input Values','Enter Data', 'error');
 		return false;
 	}
 
 	$.ajax({
 		method: 'POST',
-		url : '/login',
+		url : 'https://sigbackontrack.herokuapp.com/login',
 		data: JSON.stringify({
 			userid: username,
 			password : pass
@@ -56,11 +55,10 @@ $('#LetMeIn').click(function(){
 
 //logout page call
 $('#Logout').click(function(){
-	console.log('logout');
 	$.ajax({
 		method: 'GET',
-		url : '/logout'
-	}).then(window.location = 'http://localhost:8081');
+		url : 'https://sigbackontrack.herokuapp.com/logout'
+	}).then(window.location = 'https://sigbackontrack.herokuapp.com');
 });
 
 function printResult(result){
@@ -98,7 +96,7 @@ if(taskName === ""){return false;}
 var ERROR_LOG = console.error.bind(console);
 $.ajax({
     method: 'POST',
-    url: '/post', 
+    url: 'https://sigbackontrack.herokuapp.com/post', 
     data: JSON.stringify({
 	task: taskName
     }),
@@ -139,7 +137,7 @@ function getTaskList(date){
 	console.log(User);
     $.ajax({
 		method: 'POST',
-		url : '/result',
+		url : 'https://sigbackontrack.herokuapp.com/result',
 		data: JSON.stringify({
 			Username: User,
 			Dat: date
@@ -210,7 +208,7 @@ function getTaskList(date){
 function getVibration(user, date){
 $.ajax({
     method: 'POST',
-    url: '/Vibrate', 
+    url: 'https://sigbackontrack.herokuapp.com/Vibrate', 
     data: JSON.stringify({
 	User: user,
 	Date: date
