@@ -13,13 +13,18 @@ var pg = require('pg');
 
 //var connectionString = "postgres://polutekape:myvuw2017@depot:5432/polutekape_jdbc";
 var client = new pg.Client(
-    user: 'wudzjlxhfycqls',
-	password: '8bea5e639ed8f35ae80dad3555068c739acc0f88fac7d72461a6bcb62e1e8cd2',
-	database: 'd3rhmnr8bnkgue',
+
+    	user: 'wudzjlxhfycqls'088cf36a1362fd7cf2b231a5d982510df58203b3a4d0b2495ca8d8fe361ccc\
+d6',
+	password: '088cf36a1362fd7cf2b231a5d982510df58203b3a4d0b2495ca8d8fe361cccd6',
+	database: 'd2ldvtjdepq0tj',
 	port: 5432,
-	host: 'ec2-54-235-80-137.compute-1.amazonaws.com',
+	host: 'ec2-54-204-32-145.compute-1.amazonaws.com',
 	ssl: true
-);
+
+
+    );
+
 
 client.connect();
 

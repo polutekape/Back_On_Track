@@ -1,15 +1,16 @@
 {
-  "name": "nwen_project2",
+  "name": "sigbackontrack",
   "version": "1.0.0",
-  "description": "Project part2",
-  "main": "index.js",
+  "description": "Back On Track",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
   },
   "keywords": [
     "project2"
   ],
-  "author": "Kapeteni Polutea <kapeteni7@hotmail.com>",
+  "author": "Kapeteni Polutea <kapeteni7@gmail.com>",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.0.2",
