@@ -11,52 +11,66 @@
 <script src="js/jquery.min.js"></script>
 <script src="js/jquery-ui.min.js"></script>
 <script src="todo.js"></script>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
-
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 
 </head>
 <body>
 
 <div class="header">
-  <img src="img/Logo.png" alt="logo" align="center"/>
+  <img src="img/powerby.png" alt="logo" align="center"/>
 </div>
 
-
 <div class="container">
-<h1>Back On Track Server</h1>
-
+<!-- <h1>Back On Track Server</h1> -->
 <input type="text" name="date" id = "day" readonly>
 <input type="text" name="date" id = "CurrentUser" readonly>
 
 <div id="graph"></div>
 
-
 <div id="to-do">
-	<!-- add button here -->
-	<button id="add-todo">Add Value</button>
 	<button id="Choose-Date">Choose Date</button>
 </div>
 
+<div id="to-do">
+	<button id="Logout">Log Out</button>
+</div>
 
+<h2></h2>
+<table id="status">
+	<tr>
+		<td><div class="circleA">ACTIVE</div></td>
+		<td><div class="circleG">GOOD</div></td>
+		<td><div class="circleP">POOR</div></td>	
+		<td><div class="circleV">VIBRATED</div></td>		
+	</tr>
+	<tr>
+		<td><input type="text" name="active" id = "Active" readonly></td>
+		<td><input type="text" name="good" id = "Good" readonly></td>
+		<td><input type="text" name="poor" id = "Poor" readonly></td>
+		<td><input type="text" name="vib" id = "Vibrate" readonly></td>
+	</tr>
+</table>
 
 <div>
-<h2>Table Values</h2>
+<h2></h2>
 
-<table>
+<table id = images>
  <tr>
-    <th>User</th>
-    <th>Date</th>
-    <th>Time</th>
-    <th>Quality</th>
-  </tr>
+    <th><img src="img/img1.png" alt="logo" width = "500" height = "500" align="center"/></th>
+    <th><img src="img/img2.png" alt="logo" width = "500" height = "500" align="center"/></th>
+    <th><img src="img/img3.png" alt="logo" width = "600" height = "500" align="center"/></th>
+ </tr>
+  <tr>
+    <td><p>When we crane your neck. you’re putting 60 pounds (27kg) of effective weight on your spine. Years of poor posture can have serious long-term implications for your neck.</p></td>
+    <td><p>We spend an average of 2 to 4 hours day looking down at our smartphones. And then there’s the time spent with our noses in laptop computers, tablets and books. It all combines to a growing epidemic: 45% of office workers suffer from text neck.</p></td>
+    <td><p>Follow the guideline above to improve your posture</p></td>
+ </tr>
 </table>
 
 <table id="to-do2">
 </table>
 </div>
-
 <!-- add dialog box here -->
 <div id="new-todo" title="Add to-do item">
 	<form>
@@ -76,8 +90,6 @@
 	</form>
 </div>
 
-
-
 <!--Dialog for calendar-->
 <div id="calendar" title="Calendar">
 	<form>
@@ -87,7 +99,6 @@
 		</p>
 	</form>
 </div>
-
 
 </div>
 </body>

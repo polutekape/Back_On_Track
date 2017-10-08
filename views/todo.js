@@ -1,18 +1,32 @@
 $(document).ready(function(e) {
-$('#add-todo').button({icons:{primary: "ui-icon-circle-plus"}});
 $('#new-todo').dialog({ modal : true, autoOpen : false });
 $('#calendar').dialog({ modal : true, autoOpen : true });
 $('#con-del').dialog({ modal : true, autoOpen : false }); //task 2.8
-
+$('#Logout').button({icons:{primary: "ui-icon-locked"}});
 
 var ComingTask = ' ';
 
 
 var CurUser = "";
 var currentDate;
+var Active;
+var Good;
+var Poor;
 
 
+var Aim = {
+  x: [], 
+  y: [],
+  name : 'Aim',
+  type: 'scatter'
+};
 
+var Performance = {
+  x: [], 
+  y: [],
+  name : 'Performance',
+  type: 'scatter'
+};
 
 //Login page call
 $('#LetMeIn').click(function(){
@@ -37,6 +51,16 @@ $('#LetMeIn').click(function(){
 		contentType: "application/json",
 	    dataType:"json", 
 	}).then(printResult,username);
+});
+
+
+//logout page call
+$('#Logout').click(function(){
+	console.log('logout');
+	$.ajax({
+		method: 'GET',
+		url : 'http://localhost:8081/logout'
+	}).then(window.location = 'http://localhost:8081');
 });
 
 function printResult(result){
@@ -106,6 +130,10 @@ $(this).dialog('close');
 
 //get task list from database
 function getTaskList(date){
+	$("#Active").val("");
+	$("#Good").val("");
+	$("#Poor").val("");
+	$("#Vibrate").val("");
 	
 	var User = localStorage.getItem("CurrentUser");
 	console.log(User);
@@ -119,13 +147,57 @@ function getTaskList(date){
 		contentType: "application/json",
 	    dataType:"json", 
 		success: function(result){
-		    $('#todo-list').empty();
-		    console.log("success");
+		    $('#graph').empty();
+		    $('#to-do2').empty();
+
+		    var tableHTML = '<h1 align="center">No Data For The Selected Date</h1>';
+		    var $NoData = $(tableHTML); 
+		    if(result.length == 0){
+		    	$('#graph').prepend($NoData);
+		    	return;
+		    }
+
+		    //calculating the time 
+		    var NewTim = (result[0].tim).split(':');
+		    var OldTim = (result[result.length-1].tim).split(':');
+		    var Diff1 = new Date(0,0,0,NewTim[0],NewTim[1],NewTim[2]);
+		    var Diff2 = new Date(0,0,0,OldTim[0],OldTim[1],OldTim[2]);
+		    var Diff = Diff1 - Diff2;
+		    var difference = new Date(Diff);
+		    Active = (difference.getHours()-12) + ":" + difference.getMinutes() +":"+difference.getSeconds();
+    		$("#Active").val(Active);
+
+    		//calculating good and poor
+    		var gd = 0;
+    		var pr = 0;
+
 		    for(var i = 0; i < result.length; i++){
-			    console.log(CurUser);
-				console.log('added on client  ' +  result[i].userid + '  ' + result[i].dat);
-				addTaskList(result[i]);
+				addTaskList(result[i],i);
+			
+				if(result[i].val >= 4 && result[i].val <= 6){
+					gd++;
+				}else{
+					pr++;
+				}
 	  		}
+
+	  		if(gd == 0 ){
+	  			Good = 0;
+	  		}else{
+	  			Good = (((gd/result.length)*100).toFixed(0));
+	  		}
+
+	  		if(pr == 0){
+	  			Poor = 0;
+	  		}else{
+	  			Poor = (((pr/result.length)*100).toFixed(0));
+	  		}
+
+	  		$("#Good").val(Good + ' %');
+	  		$("#Poor").val(Poor + ' %');
+
+	  		getVibration(User,date);
+	  		PlotResults(Aim,Performance);
 		},
 		error: function(error){
 			console.log("error");
@@ -134,8 +206,34 @@ function getTaskList(date){
 }
 
 
-//assigning the right item to the correct list
-function addTaskList(data){
+//Get the number of vibrations
+function getVibration(user, date){
+$.ajax({
+    method: 'POST',
+    url: '/Vibrate', 
+    data: JSON.stringify({
+	User: user,
+	Date: date
+    }),
+    contentType: "application/json",
+    dataType:"json",
+    success : function(vibrates){
+    	if(vibrates.length != 0){
+    		console.log('polo');
+    		console.log(vibrates[0].vib);
+    		$("#Vibrate").val(vibrates[0].vib);
+    	}else{
+    		console.log('No Vib');
+    	}
+    },
+    error : function(error){
+    	console.log('error');
+    }
+});
+}
+
+//Assigning the right item to the correct list
+function addTaskList(data,posi){
    console.log('listing ' + data.userid);
 
    if(data == ' ' || data == undefined){console.log('nothing'); return;}
@@ -144,9 +242,10 @@ function addTaskList(data){
 	var tableHTML = '<tr><td><span class = "userid"></td>';
 	tableHTML += '<td><span class = "date"></td>';
 	tableHTML += '<td><span class = "time"></td>';
-	tableHTML += '<td><span class = "value"></td>';
+	tableHTML += '<td><span class = "value"></td></tr>';
 
 	 var datstr = data.dat;
+	 var timstr = data.tim;
 
 	//table design
 	var $newTable = $(tableHTML);
@@ -154,8 +253,27 @@ function addTaskList(data){
 	$newTable.find('.date').text(datstr.substring(0, 10));
 	$newTable.find('.time').text(data.tim);
 	$newTable.find('.value').text(data.val);
-	$('#to-do2').prepend($newTable);
+	//$('#to-do2').prepend($newTable);
 
+	Aim.x.push(data.tim);
+	Aim.y.push(5);
+	Performance.x.push(data.tim);
+	Performance.y.push(data.val);
+}
+
+//plotting
+function PlotResults(Aim,Performance){
+	var data = [Aim, Performance];
+	var layout = {
+		xaxis:{
+			title: 'Time'
+		},
+		yaxis: {
+			title: 'Performance'
+		}
+	};
+
+	Plotly.newPlot('graph', data, layout);
 }
 
 //2.6 Support drag and drop
@@ -172,51 +290,6 @@ $('.sortlist').sortable({
 });
 
 
-//2.8 confirmation deletion task
-$('#con-del').dialog({
-modal : true, autoOpen : false,
-buttons : {
- "Confirm" : function(){
-		$('#todo-list').empty();
-		$('#to-do2').empty();
-  		$.ajax({
- 			method: 'DELETE',
- 			url: '/delete',
- 			data: JSON.stringify({
- 				task: 'delete'
- 			}),
- 			dataType: 'json',
- 			contentType: 'application/json; charsett=utf-8'
- 		})
- 			$(this).dialog('close');
- 	},
- "Cancel" : function(){$(this).dialog('close');}
-}
-});
-
-var Aim = {
-  x: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 
-  y: [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5],
-  name : 'Aim',
-  type: 'scatter'
-};
-var Performance = {
-  x: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 
-  y: [0, 2, 5, 8, 6, 7, 5, 4, 3, 2, 4], 
-  name : 'Performance',
-  type: 'scatter'
-};
-var data = [Aim, Performance];
-var layout = {
-	xaxis:{
-		title: 'Time'
-	},
-	yaxis: {
-		title: 'Performance'
-	}
-};
-Plotly.newPlot('graph', data, layout);
-
 //Calendar
 $(function() {
     $( "#datepicker-12" ).datepicker();
@@ -229,6 +302,10 @@ $('#calendar').dialog({
 modal : true, autoOpen : false,
 buttons : {
  "Run" : function(){
+ 			Aim.x = [];
+ 			Aim.y = [];
+ 			Performance.x = [];
+ 			Performance.y = [];
  			currentDate = $( "#datepicker-12" ).val();
  			$("#day").val(currentDate);
     		console.log(currentDate);
@@ -243,8 +320,9 @@ buttons : {
 }
 });
 
-//getTaskList();
 $("#CurrentUser").val(localStorage.getItem("CurrentUser"));
+console.log(Aim);
+console.log(Performance);
 }); // end ready
 
 

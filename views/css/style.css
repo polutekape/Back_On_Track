@@ -26,6 +26,7 @@ body {
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#3E1D6D', endColorstr='#092756',GradientType=1 );
 }
 .login { 
+	padding-top: 8%;
 	position: absolute;
 	top: 50%;
 	left: 50%;
