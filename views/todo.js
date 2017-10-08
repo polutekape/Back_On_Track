@@ -43,7 +43,7 @@ $('#LetMeIn').click(function(){
 
 	$.ajax({
 		method: 'POST',
-		url : 'https://sigbackontrack.herokuapp.com/login',
+		url : '/login',
 		data: JSON.stringify({
 			userid: username,
 			password : pass
@@ -59,7 +59,7 @@ $('#Logout').click(function(){
 	console.log('logout');
 	$.ajax({
 		method: 'GET',
-		url : 'https://sigbackontrack.herokuapp.com/logout'
+		url : '/logout'
 	}).then(window.location = 'http://localhost:8081');
 });
 
@@ -72,7 +72,7 @@ function printResult(result){
 	    	// Store
 	    	localStorage.setItem("CurrentUser", CurUser);
 	    	// Retrieve
-	    	window.location = 'https://sigbackontrack.herokuapp.com/datalist';
+	    	window.location = '/datalist';
 		} else {
 	   		$("#CurrentUser").val(localStorage.getItem("Sorry, your browser does not support Web Storage..."));
 		}
@@ -139,7 +139,7 @@ function getTaskList(date){
 	console.log(User);
     $.ajax({
 		method: 'POST',
-		url : 'https://sigbackontrack.herokuapp.com/result',
+		url : '/result',
 		data: JSON.stringify({
 			Username: User,
 			Dat: date
@@ -210,7 +210,7 @@ function getTaskList(date){
 function getVibration(user, date){
 $.ajax({
     method: 'POST',
-    url: 'https://sigbackontrack.herokuapp.com/Vibrate', 
+    url: '/Vibrate', 
     data: JSON.stringify({
 	User: user,
 	Date: date
@@ -272,7 +272,6 @@ function PlotResults(Aim,Performance){
 			title: 'Performance'
 		}
 	};
-
 	Plotly.newPlot('graph', data, layout);
 }
 
