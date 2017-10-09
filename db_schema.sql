@@ -21,7 +21,7 @@ CREATE TABLE Data(
 CREATE TABLE Vibrate(
 	userid char(15) NOT NULL,
 	dat DATE NOT NULL default CURRENT_DATE,
-	vib INT NOT NUll,
+	vib INT,
 	PRIMARY KEY(userid,dat),
 	CONSTRAINT FK_Users FOREIGN KEY (userid) REFERENCES Users(userid) ON DELETE RESTRICT ON UPDATE CASCADE
 	); 
