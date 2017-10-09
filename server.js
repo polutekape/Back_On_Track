@@ -81,7 +81,7 @@ app.post('/CheckUser', function(req,res){
 
 
 
-app.post('/badposture',function(req,res)){
+app.post('/badposture',function(req,res){
     var query = client.query("INSERT INTO Vibrate(Userid,Dat) Values('"+ req.body.Userid +"','" + req.body.Date + "');");
 
     query.on('error', function(err){
