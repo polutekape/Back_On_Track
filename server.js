@@ -12,15 +12,6 @@ var pg = require('pg');
 
 
 var connectionString = "postgres://wudzjlxhfycqls:8bea5e639ed8f35ae80dad3555068c739acc0f88fac7d72461a6bcb62e1e8cd2@ec2-54-235-80-137.compute-1.amazonaws.com:5432/d3rhmnr8bnkgue";
-/*
-var client = new pg.Client(
-   user: 'wudzjlxhfycqls',
-   password: '8bea5e639ed8f35ae80dad3555068c739acc0f88fac7d72461a6bcb62e1e8cd2',
-   database: 'd3rhmnr8bnkgue',
-   port: 5432,
-   host: 'ec2-54-235-80-137.compute-1.amazonaws.com',
-   ssl: true
-);*/
 
 var client = new pg.Client(connectionString);
 client.connect();
@@ -162,8 +153,8 @@ app.post('/result', function(req, res){
 
 //POST REQUEST
 app.post('/postuser', function (req,res){
-	console.log('Added data for' + req.body.User + ' ,' + req.body.Val);
-    var query = client.query("INSERT INTO Data(Userid,Val) Values('"+ req.body.User +"','" + req.body.Val + "');");
+    console.log('Added data for' + req.body.User + ' ,' + req.body.Val + ','+ req.body.Dat + ',' + req.body.Tim);
+    var query = client.query("INSERT INTO Data(Userid,Dat,Tim,Val) Values('"+ req.body.User +"','" + req.body.Dat + "','"+ req.body.Tim +"','"+ req.body.Val+"');");
 
     query.on('error', function(err){
         console.log('Error retrieving things: ' + err);
