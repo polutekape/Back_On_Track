@@ -162,7 +162,7 @@ function getTaskList(date){
 		    var OldDiff = new Date(0,0,0,OldTim[0],OldTim[1],OldTim[2]);
 		    var Diff = NewDiff - OldDiff;
 		    var difference = new Date(Diff);
-		    Active = (difference.getHours()) + ":" + (difference.getMinutes()) +":"+difference.getSeconds();
+		    Active = (difference.getHours()-13) + ":" + (difference.getMinutes()) +":"+difference.getSeconds();
     		    $("#Active").val(Active);
 
     		//calculating good and poor
