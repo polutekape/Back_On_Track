@@ -80,6 +80,22 @@ app.post('/CheckUser', function(req,res){
 })
 
 
+
+app.post('/badposture',function(req,res)){
+    var query = client.query("INSERT INTO Vibrate(Userid,Dat) Values('"+ req.body.Userid +"','" + req.body.Date + "');");
+
+    query.on('error', function(err){
+        console.log('Error retrieving things: ' + err);
+        res.sendStatus('404');
+   });
+    //After all data is returned, close connection and return results
+    query.on('end', function(){
+        //client.end();
+        res.sendStatus('202');
+    });
+});
+
+
 app.post('/Vibrate',function(req,res){
     console.log('reached vibrate');
     console.log(req.body.User+ ' ' + req.body.Date);
