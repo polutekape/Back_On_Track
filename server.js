@@ -138,7 +138,7 @@ app.post('/result', function(req, res){
     var date = req.body.Dat;
     console.log("SELECT * FROM data WHERE Userid = '"+user+"' AND Dat = '"+date+"';");
 
-    var query = client.query("SELECT * FROM DATA WHERE USERID = '"+user+"' AND Dat = '"+date+"' ORDER BY Tim DESC;");
+    var query = client.query("SELECT * FROM DATA WHERE USERID = '"+user+"' AND Dat = '"+date+"' ORDER BY Tim ASC;");
     var results = [];
     //Stream results back one row at a time
     query.on('row',function(row){

@@ -156,14 +156,14 @@ function getTaskList(date){
 		    }
 
 		    //calculating the time 
-		    var NewTim = (result[0].tim).split(':');
-		    var OldTim = (result[result.length-1].tim).split(':');
+		    var OldTim = (result[0].tim).split(':');
+		    var NewTim = (result[result.length-1].tim).split(':');
 		    var Diff1 = new Date(0,0,0,NewTim[0],NewTim[1],NewTim[2]);
 		    var Diff2 = new Date(0,0,0,OldTim[0],OldTim[1],OldTim[2]);
-		    var Diff = Diff1 - Diff2;
+		    var Diff = Diff2 - Diff1;
 		    var difference = new Date(Diff);
 		    Active = (difference.getHours()-12) + ":" + difference.getMinutes() +":"+difference.getSeconds();
-    		$("#Active").val(Active);
+    		    $("#Active").val(Active);
 
     		//calculating good and poor
     		var gd = 0;
