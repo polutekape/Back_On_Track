@@ -82,7 +82,7 @@ app.post('/CheckUser', function(req,res){
 
 
 app.post('/badposture',function(req,res){
-    var query = client.query("INSERT INTO Vibrate(Userid,Dat) Values('"+ req.body.Userid +"','" + req.body.Date + "',"+req.body.Vib+");");
+    var query = client.query("INSERT INTO Vibrate(Userid,Dat,Vib) Values('"+ req.body.Userid +"','" + req.body.Date + "',"+ req.body.Vib +");");
 
     query.on('error', function(err){
         console.log('Error retrieving things: ' + err);
