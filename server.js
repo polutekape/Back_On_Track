@@ -99,7 +99,7 @@ app.post('/badposture',function(req,res){
 app.post('/Vibrate',function(req,res){
     console.log('reached vibrate');
     console.log(req.body.User+ ' ' + req.body.Date);
-    var query = client.query("SELECT * FROM Vibrate WHERE Userid = '"+ req.body.User +"' AND Dat = '" + req.body.Date+ "');");
+    var query = client.query("SELECT * FROM Vibrate WHERE Userid = '"+ req.body.User +"' AND Dat = '" + req.body.Date+ "';");
     console.log("SELECT * FROM Vibrate WHERE Userid = '"+ req.body.User +"' AND Dat = '" + req.body.Date+ "';");
     var vibrates = [];
     //Stream results back one row at a time
