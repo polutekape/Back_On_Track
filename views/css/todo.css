@@ -338,6 +338,11 @@ img.power {
   border-color: red;
 }
 
+
+#images{
+    width:90%;
+}
+
 #images th{
     background-color: #EDEDED;
     color: white;
